@@ -1,4 +1,5 @@
 import './stimulus_bootstrap.js';
+import './js/select.js';
 /*
  * Welcome to your app's main JavaScript file!
  *
