@@ -4,16 +4,19 @@
     </a>
 
     <ul id="main-menu">
-        <li class="{% if app.request.get('_route') == 'home' %}active{% endif %}">
+
+        <li class="{{ active_menu == 'projets' ? 'active' : '' }}">
             <a href="{{ path('app_home') }}">
                 <i class="fa-solid fa-list-check"></i> Projets
             </a>
         </li>
 
-        <li class="">
-            <a href="#">
+        <li class="{{ active_menu == 'employes' ? 'active' : '' }}">
+            <a href="{{ path('employee_index') }}">
                 <i class="fa-regular fa-user"></i> Équipe
             </a>
         </li>
+
     </ul>
 </nav>
+

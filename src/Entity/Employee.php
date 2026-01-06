@@ -116,6 +116,17 @@ class Employee
     }
 
     /**
+     * Retourne les initiales de l'employé (première lettre du prénom + première lettre du nom).
+     */
+    public function getInitials(): string
+    {
+        $firstInitial = $this->firstname ? mb_strtoupper(mb_substr($this->firstname, 0, 1)) : '';
+        $lastInitial = $this->lastname ? mb_strtoupper(mb_substr($this->lastname, 0, 1)) : '';
+        
+        return $firstInitial . $lastInitial;
+    }
+
+    /**
      * @return Collection<int, Project>
      */
     public function getProjects(): Collection

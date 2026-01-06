@@ -1,47 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width; initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}TaskLinker{% endblock %}</title>
 
+    {# Importmap obligatoire pour charger app.js (et donc app.css) #}
     {% block importmap %}
-        {{ importmap('app') }}
+    {{ importmap('app') }}
     {% endblock %}
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {# FontAwesome #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            crossorigin="anonymous"></script>
-
+    {# Select2 CSS #}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script src="{{ asset('js/select.js') }}"></script>
 </head>
 
 <body>
-<div id="main-container">
+    <div id="main-container">
 
-    {% include 'partials/nav.html.twig' %}
+        {# MENU FACTORISÉ #}
+        {% include 'partials/nav.html.twig' %}
 
-    <main>
-        <header>
-            <div id="current-user"></div>
-            <div id="title-page">
-                <h1>{% block page_title %}{% endblock %}</h1>
+        <main>
+
+            <header>
+                <div id="current-user"></div>
+
+                <div id="title-page">
+                    <div class="flex-header"> 
+                        {# Titre de la page (obligatoire) #} 
+                        <h1>{% block page_title %}{% endblock %}</h1> 
+
+                        {# Avatars + bouton Modifier (optionnel/projets) #}
+                        {% block page_actions %}{% endblock %}
+                    </div>
+                </div>
+            </header>
+
+            <div id="content">
+                {% block body %}{% endblock %}
             </div>
-        </header>
 
-        <div id="content">
-            {% block body %}{% endblock %}
-        </div>
-    </main>
+        </main>
+    </div>
 
-</div>
+    {# jQuery + Select2 #}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    {# Ton JS perso #}
+    <script src="{{ asset('js/select.js') }}"></script>
+
 </body>
-</html>
 
+</html>

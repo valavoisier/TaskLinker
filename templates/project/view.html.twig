@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ project.title }} - TaskLinker{% endblock %}
+
+{# Le titre seul, utilisé dans le <h1> du bandeau #}
+{% block page_title %}
+    {{ project.title }}
+{% endblock %}
+
+{# Avatars + bouton Modifier dans le bandeau #}
+{% block page_actions %}
+
+    {# Avatars statiques pour l’instant #}
+    <div class="user-list">
+        <div class="avatar">ND</div>
+        <div class="avatar">DB</div>
+    </div>
+
+    <a class="button" href="{{ path('project_edit', { id: project.id }) }}">
+        Modifier
+    </a>
+
+{% endblock %}
+
+{% block body %}
+
+<div id="tasks-container">
+
+    {# --- TODO COLUMN --- #}
+    <div class="task-column">
+        <h2>To Do</h2>
+        <div class="tasks-list">
+
+            {% for task in todoTasks %}
+                <a class="task" href="{{ path('task_view', { id: task.id }) }}">
+                    <h3>{{ task.title }}</h3>
+                    <p>{{ task.description }}</p>
+
+                    <div class="task-infos">
+                        {% if task.deadline %}
+                            <div class="task-deadline">
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ task.deadline|date('d/m/Y') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+
+            <a href="{{ path('task_add', { projectId: project.id }) }}" class="task-add">
+                + Ajouter une tâche
+            </a>
+        </div>
+    </div>
+
+    {# --- DOING COLUMN --- #}
+    <div class="task-column">
+        <h2>Doing</h2>
+        <div class="tasks-list">
+
+            {% for task in doingTasks %}
+                <a class="task" href="{{ path('task_view', { id: task.id }) }}">
+                    <h3>{{ task.title }}</h3>
+                    <p>{{ task.description }}</p>
+
+                    <div class="task-infos">
+                        {% if task.deadline %}
+                            <div class="task-deadline">
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ task.deadline|date('d/m/Y') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+
+            <a href="{{ path('task_add', { projectId: project.id }) }}" class="task-add">
+                + Ajouter une tâche
+            </a>
+        </div>
+    </div>
+
+    {# --- DONE COLUMN --- #}
+    <div class="task-column">
+        <h2>Done</h2>
+        <div class="tasks-list">
+
+            {% for task in doneTasks %}
+                <a class="task" href="{{ path('task_view', { id: task.id }) }}">
+                    <h3>{{ task.title }}</h3>
+                    <p>{{ task.description }}</p>
+
+                    <div class="task-infos">
+                        {% if task.deadline %}
+                            <div class="task-deadline">
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ task.deadline|date('d/m/Y') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+
+            <a href="{{ path('task_add', { projectId: project.id }) }}" class="task-add">
+                + Ajouter une tâche
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
