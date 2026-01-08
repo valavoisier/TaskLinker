@@ -19,7 +19,9 @@ final class TaskController extends AbstractController
     {
         $task = new Task();
         $task->setProject($project);
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, [
+             'project' => $project, 
+            ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($task);
@@ -35,15 +37,20 @@ final class TaskController extends AbstractController
     #[Route('/task/{id}/edit', name: 'task_edit')] 
     public function edit(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(TaskType::class, $task);
+        $project = $task->getProject();// Récupère le projet associé à la tâche
+        $form = $this->createForm(TaskType::class, $task, ['project' => $project, // On passe le projet au formulaire 
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('project_view', ['id' => $task->getProject()->getId(),]);
+            return $this->redirectToRoute('project_view', [
+                'id' => $project->getId(),
+            ]);
         }
         return $this->render('task/edit.html.twig', [
             'form' => $form->createView(), 
-            'task' => $task, 
+            'task' => $task,
+            'project' => $project, 
             'active_menu' => 'projets',]);
     }
 
