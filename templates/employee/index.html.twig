@@ -18,39 +18,43 @@
 
         <tbody>
             {% for employee in employees %}
-                <tr>
-                    <td>
-                        <div class="employee-infos">
-                            <div class="employee-avatar">
-                                {{ employee.initials }}
-                            </div>
-
-                            <div class="employee-coords">
-                                <strong>{{ employee.firstname }} {{ employee.lastname }}</strong>
-                                <span>{{ employee.email }}</span>
-                            </div>
+            <tr>
+                <td>
+                    <div class="employee-infos">
+                        <div class="employee-avatar">
+                            {{ employee.initials }}
                         </div>
-                    </td>
 
-                    <td>{{ employee.status.value }}</td>
+                        <div class="employee-coords">
+                            <strong>{{ employee.firstname }} {{ employee.lastname }}</strong>
+                            <span>{{ employee.email }}</span>
+                        </div>
+                    </div>
+                </td>
 
-                    <td>
-                        <a class="button button-edit-team"
-                           href="{{ path('employee_edit', { id: employee.id }) }}">
-                            Éditer
-                        </a>
+                <td>{{ employee.status.getLabel() }}</td>
 
-                        <a class="delete-team"
-                           href="{{ path('employee_delete', { id: employee.id }) }}"
-                           onclick="return confirm('Supprimer cet employé ?');">
-                            Supprimer
-                        </a>
-                    </td>
-                </tr>
+                <td>
+                    <a class="button button-edit-team" href="{{ path('employee_edit', { id: employee.id }) }}">
+                        Éditer
+                    </a>
+
+                    <a href="#" class="delete-team" onclick="event.preventDefault();
+                        if (confirm('Supprimer cet employé ?')) {
+                            document.getElementById('delete-employee-{{ employee.id }}').submit();}">
+                        Supprimer
+                    </a>
+
+                    <form id="delete-employee-{{ employee.id }}"
+                        action="{{ path('employee_delete', { id: employee.id }) }}" method="post" style="display:none;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_employee_' ~ employee.id) }}">
+                    </form>
+
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 
 </div>
 {% endblock %}
-

@@ -3,11 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Employee;
-use App\Entity\Project;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Enum\EmployeeStatus;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EmployeeType extends AbstractType
 {
@@ -18,13 +18,11 @@ class EmployeeType extends AbstractType
             ->add('lastname')
             ->add('email')
             ->add('entryDate')
-            ->add('status')
-            ->add('projects', EntityType::class, [
-                'class' => Project::class,
-                'choice_label' => 'id',
-                'multiple' => true,
+            ->add('status', ChoiceType::class, [
+                'choices' => EmployeeStatus::cases(), 
+                'choice_label' => fn(EmployeeStatus $choice) => $choice->getLabel(),
             ])
-        ;
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
