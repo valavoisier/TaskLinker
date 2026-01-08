@@ -13,7 +13,7 @@ final class HomeController extends AbstractController
     public function index(ProjectRepository $projectRepository): Response
     {
         return $this->render('home/index.html.twig', [
-            'projects' => $projectRepository->findAll(),
+            'projects' => $projectRepository->findBy(['archived' => false]),
             'active_menu' => 'projets',
         ]);
     }

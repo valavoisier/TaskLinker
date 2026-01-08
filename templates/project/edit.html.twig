@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nom du projet - TaskLinker{% endblock %}
-{% block page_title %}Nom du projet{% endblock %}
+{% block title %}{{ project.title }} - TaskLinker{% endblock %}
+{% block page_title %}
+{{ project.title }}
+{% endblock %}
 {% block page_actions %}{% endblock %}
 
 {% block body %}

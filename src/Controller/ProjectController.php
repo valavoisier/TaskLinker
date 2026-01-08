@@ -28,7 +28,9 @@ final class ProjectController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($project);
             $entityManager->flush();
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('project_view', [
+                'id' => $project->getId(),
+            ]);
         }
         return $this->render('project/add.html.twig', [
             'form' => $form->createView(),
@@ -69,7 +71,7 @@ final class ProjectController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_home', [
+            return $this->redirectToRoute('project_view', [
                 'id' => $project->getId(),
             ]);
         }
@@ -80,7 +82,7 @@ final class ProjectController extends AbstractController
             'active_menu' => 'projets',
         ]);
     }
-    
+
     #[Route('/project/{id}/delete', name: 'project_delete', methods: ['POST'])]
     public function delete(Project $project, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -99,4 +101,20 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    #[Route('/project/{id}/archive', name: 'project_archive', methods: ['POST'])]
+    public function archive(Project $project, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('archive_project_' . $project->getId(), $request->request->get('_token'))) {
+            // Force Doctrine à recharger l’état réel depuis la base 
+            $entityManager->refresh($project);
+           
+            $project->setArchived(true);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->redirectToRoute('project_view', [
+            'id' => $project->getId(),
+        ]);
+    }
 }
