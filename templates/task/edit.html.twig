@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la tâche - TaskLinker{% endblock %}
+{% block page_title %}Gestion des droits d'accès{% endblock %}
+{% block page_actions %}{% endblock %}
+
+{% block body %}
+<div id="content">
+
+    {{ form_start(form) }}
+
+    <div>
+        {{ form_row(form.title, {label: 'Titre de la tâche'}) }}
+    </div>
+
+    <div>
+        {{ form_row(form.description, {label: 'Description'}) }}
+    </div>
+
+    <div class="flex-form">
+        <div>
+            {{ form_row(form.deadline , {label: 'Date'}) }}
+        </div>
+
+        <div>
+            {{ form_row(form.status, {label: 'Statut'}) }}
+        </div>
+    </div>
+
+    <div>
+        {{ form_row(form.employee, {label: 'Membre'}) }}
+    </div>
+
+    <br>
+
+    <button class="button button-submit">Modifier</button>
+    <a href="#" class="delete-task" onclick="event.preventDefault(); 
+        if(confirm('Supprimer cette tâche ?')) { document.getElementById('delete-task-form').submit(); }">
+        Supprimer la tâche
+    </a>
+
+    {{ form_end(form) }}
+    {# --- FORMULAIRE INVISIBLE POUR LA SUPPRESSION --- #} 
+    <form id="delete-task-form" action="{{ path('task_delete', { id: task.id }) }}" method="post" style="display:none;"> 
+        <input type="hidden" name="_token" value="{{ csrf_token('delete_task_' ~ task.id) }}"> 
+    </form>
+</div>
+{% endblock %}

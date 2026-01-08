@@ -2,34 +2,52 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Employee;
+use App\Form\EmployeeType;
+use App\Repository\EmployeeRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
 final class EmployeeController extends AbstractController
 {
     #[Route('/employee', name: 'employee_index')]
-    public function index(): Response
+    public function index(EmployeeRepository $employeeRepository): Response
     {
         return $this->render('employee/index.html.twig', [
+            'employees' => $employeeRepository->findAll(),
             'active_menu' => 'employes',
         ]);
     }
 
     #[Route('/employees/{id}', name: 'employee_view', requirements: ['id' => '\d+'])]
-    public function view(int $id): Response
+    public function view(Employee $employee): Response
     {
         return $this->render('employee/view.html.twig', [
+            'employee' => $employee,
             'active_menu' => 'employes',
-            'employeeId' => $id,
         ]);
     }
 
-    #[Route('/employees/add', name: 'employee_add')] 
-    public function add(): Response
+    #[Route('/employee/edit/{id}', name: 'employee_edit')] public function edit(Request $request, Employee $employee, EntityManagerInterface $em): Response
     {
-        return $this->render('employee/add.html.twig', [
-            'active_menu' => 'employes',
-        ]);
+        $form = $this->createForm(EmployeeType::class, $employee);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            return $this->redirectToRoute('employee_index');
+        }
+        return $this->render('employee/edit.html.twig', ['form' => $form->createView(), 'employee' => $employee, 'active_menu' => 'employes',]);
+    }
+
+    #[Route('/employee/delete/{id}', name: 'employee_delete', methods: ['POST'])] public function delete(Request $request, Employee $employee, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete_employee_' . $employee->getId(), $request->request->get('_token'))) {
+            $em->remove($employee);
+            $em->flush();
+        }
+        return $this->redirectToRoute('employee_index');
     }
 }

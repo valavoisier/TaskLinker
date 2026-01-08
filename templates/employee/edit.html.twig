@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l’employé - TaskLinker{% endblock %}
+{% block page_title %}Modifier l’employé{% endblock %}
+{% block page_actions %}{% endblock %}
+
+{% block body %}
+<div id="content">
+
+    {{ form_start(form) }}
+
+        <div>
+            {{ form_label(form.firstname) }}
+            {{ form_widget(form.firstname) }}
+        </div>
+
+        <div>
+            {{ form_label(form.lastname) }}
+            {{ form_widget(form.lastname) }}
+        </div>
+
+        <div>
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+        </div>
+
+        <br>
+
+        <button class="button button-submit">Modifier</button>
+
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}

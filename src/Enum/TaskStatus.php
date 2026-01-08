@@ -14,9 +14,9 @@ enum TaskStatus: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::TODO => 'À faire',
-            self::DOING => 'En cours',
-            self::DONE => 'Terminé',
+            self::TODO => 'To Do',
+            self::DOING => 'Doing',
+            self::DONE => 'Done',
         };
     }
 

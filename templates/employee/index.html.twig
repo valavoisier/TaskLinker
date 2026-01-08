@@ -1,20 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmployeeController!{% endblock %}
+{% block title %}Liste des employés - TaskLinker{% endblock %}
+{% block page_title %}Équipe{% endblock %}
+{% block page_actions %}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div id="content">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table id="team-container">
+        <thead>
+            <tr>
+                <th>Prénom, Nom</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/TaskLinker/src/Controller/EmployeeController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/TaskLinker/templates/employee/index.html.twig</code></li>
-    </ul>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>
+                        <div class="employee-infos">
+                            <div class="employee-avatar">
+                                {{ employee.initials }}
+                            </div>
+
+                            <div class="employee-coords">
+                                <strong>{{ employee.firstname }} {{ employee.lastname }}</strong>
+                                <span>{{ employee.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>{{ employee.status.value }}</td>
+
+                    <td>
+                        <a class="button button-edit-team"
+                           href="{{ path('employee_edit', { id: employee.id }) }}">
+                            Éditer
+                        </a>
+
+                        <a class="delete-team"
+                           href="{{ path('employee_delete', { id: employee.id }) }}"
+                           onclick="return confirm('Supprimer cet employé ?');">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </div>
 {% endblock %}
+

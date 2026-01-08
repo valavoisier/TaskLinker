@@ -3,32 +3,61 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Form\TaskType;
+use App\Entity\Project;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class TaskController extends AbstractController
 {
-    #[Route('/task', name: 'app_task')]
-    public function index(): Response
+
+    #[Route('/project/{id}/task/add', name: 'task_add')]
+    public function add(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('task/index.html.twig', [
+        $task = new Task();
+        $task->setProject($project);
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($task);
+            $entityManager->flush();
+            return $this->redirectToRoute('project_view', ['id' => $project->getId(),]);
+        }
+        return $this->render('task/add.html.twig', [
+            'form' => $form->createView(),
             'active_menu' => 'projets',
         ]);
     }
-    #[Route('/task/{id}', name: 'task_view')] 
-    public function view(Task $task): Response
+
+    #[Route('/task/{id}/edit', name: 'task_edit')] 
+    public function edit(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('task/view.html.twig', [
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('project_view', ['id' => $task->getProject()->getId(),]);
+        }
+        return $this->render('task/edit.html.twig', [
+            'form' => $form->createView(), 
             'task' => $task, 
             'active_menu' => 'projets',]);
     }
-    #[Route('/project/{projectId}/task/add', name: 'task_add')] 
-    public function add(int $projectId): Response
-    {
-        return $this->render('task/add.html.twig', [
-            'projectId' => $projectId, 
-            'active_menu' => 'projets',
-        ]);
-    }
+
+    #[Route('/task/{id}/delete', name: 'task_delete', methods: ['POST'])]
+public function delete(Task $task, EntityManagerInterface $entityManager): Response
+{
+    $projectId = $task->getProject()->getId();
+
+    $entityManager->remove($task);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('project_view', [
+        'id' => $projectId,
+    ]);
+}
+
 }

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un projet - TaskLinker{% endblock %}
+{% block page_title %}Nouveau projet{% endblock %}
+{% block page_actions %}{% endblock %}
+
+{% block body %}
+<div id="content">
+
+    {{ form_start(form) }}
+
+        <div>
+            {{ form_row(form.title, { label: 'Titre du projet' }) }}
+        </div>
+
+        <div>
+            {{ form_row(form.employees, { label: 'Inviter des membres' }) }}
+        </div>
+
+        <br>
+
+        <button class="button button-submit">Continuer</button>
+
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}
