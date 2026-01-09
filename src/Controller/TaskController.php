@@ -13,7 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class TaskController extends AbstractController
 {
-
+    /** 
+     * Ajouter une tâche à un projet
+     */
     #[Route('/project/{id}/task/add', name: 'task_add')]
     public function add(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -29,11 +31,14 @@ final class TaskController extends AbstractController
             return $this->redirectToRoute('project_view', ['id' => $project->getId(),]);
         }
         return $this->render('task/add.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'active_menu' => 'projets',
         ]);
     }
 
+    /** 
+     * Éditer une tâche
+     */
     #[Route('/task/{id}/edit', name: 'task_edit')] 
     public function edit(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -48,23 +53,26 @@ final class TaskController extends AbstractController
             ]);
         }
         return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(), 
+            'form' => $form, 
             'task' => $task,
             'project' => $project, 
             'active_menu' => 'projets',]);
     }
 
+    /** 
+     * Supprimer une tâche
+     */
     #[Route('/task/{id}/delete', name: 'task_delete', methods: ['POST'])]
-public function delete(Task $task, EntityManagerInterface $entityManager): Response
-{
-    $projectId = $task->getProject()->getId();
+    public function delete(Task $task, EntityManagerInterface $entityManager): Response
+    {
+        $projectId = $task->getProject()->getId();
 
-    $entityManager->remove($task);
-    $entityManager->flush();
+        $entityManager->remove($task);
+        $entityManager->flush();
 
-    return $this->redirectToRoute('project_view', [
-        'id' => $projectId,
-    ]);
-}
+        return $this->redirectToRoute('project_view', [
+            'id' => $projectId,
+        ]);
+    }
 
 }

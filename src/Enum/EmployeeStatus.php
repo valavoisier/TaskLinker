@@ -11,7 +11,7 @@ enum EmployeeStatus: string
     case CDD = 'cdd';
     case FREELANCE = 'freelance';
 
-    // Retourne le label lisible du statut.
+    /* Retourne le label lisible du statut.*/
     public function getLabel(): string
     {
         return match ($this) {
@@ -21,7 +21,7 @@ enum EmployeeStatus: string
         };
     }
 
-    // Retourne un tableau des choix disponibles pour les statuts d'employé.
+    /* Retourne un tableau des choix disponibles pour les statuts d'employé.*/
     public static function choices(): array
     {
         return [

@@ -13,31 +13,47 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ProjectController extends AbstractController
 {
+    /** 
+     * Liste des projets (redirection vers la page d'accueil)
+     */
     #[Route('/project', name: 'app_project')]
     public function index(): Response
     {
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/project/add', name: 'project_add')]
+    /** 
+     * Ajouter un projet
+     */
+    #[Route('/project/add', name: 'project_add', methods: ['GET', 'POST'])]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $project = new Project();
+        $project ??= new Project();
         $form = $this->createForm(ProjectType::class, $project);
-        $form->handleRequest($request);
+        $form->handleRequest($request);     
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($project);
             $entityManager->flush();
+
             return $this->redirectToRoute('project_view', [
                 'id' => $project->getId(),
             ]);
         }
+        
+        // Debug: afficher les erreurs dans les logs
+        if ($form->isSubmitted() && !$form->isValid()) {
+            dump($form->getErrors(true, false));
+        }
+        
         return $this->render('project/add.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'active_menu' => 'projets',
         ]);
     }
 
+    /** 
+     * Vue d'un projet
+     */
     #[Route('/project/{id}', name: 'project_view')]
     public function view(Project $project): Response
     {
@@ -62,6 +78,9 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    /** 
+     * Éditer un projet
+     */
     #[Route('/project/{id}/edit', name: 'project_edit')]
     public function edit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -77,12 +96,15 @@ final class ProjectController extends AbstractController
         }
 
         return $this->render('project/edit.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'project' => $project,
             'active_menu' => 'projets',
         ]);
     }
 
+    /** 
+     * Supprimer un projet
+     */
     #[Route('/project/{id}/delete', name: 'project_delete', methods: ['POST'])]
     public function delete(Project $project, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -101,6 +123,9 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    /** 
+     * Archiver un projet
+     */
     #[Route('/project/{id}/archive', name: 'project_archive', methods: ['POST'])]
     public function archive(Project $project, EntityManagerInterface $entityManager, Request $request): Response
     {

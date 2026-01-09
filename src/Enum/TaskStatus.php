@@ -10,7 +10,7 @@ enum TaskStatus: string
     case DOING = 'doing';
     case DONE = 'done';
 
-    // Retourne le label lisible du statut.
+    /* Retourne le label lisible du statut.*/
     public function getLabel(): string
     {
         return match ($this) {
@@ -20,7 +20,7 @@ enum TaskStatus: string
         };
     }
 
-    // Retourne un tableau des choix disponibles pour les statuts de tâche.
+    /* Retourne un tableau des choix disponibles pour les statuts de tâche.*/
     public static function choices(): array
     {
         return [

@@ -7,7 +7,7 @@
 {% block body %}
 <div id="content">
 
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <div>
             {{ form_row(form.title, { label: 'Titre de la tâche' }) }}
@@ -33,7 +33,7 @@
 
         <br>
 
-        <button class="button button-submit">Ajouter</button>
+        <button type="submit" class="button button-submit">Ajouter</button>
 
     {{ form_end(form) }}
 

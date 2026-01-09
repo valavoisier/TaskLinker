@@ -7,7 +7,8 @@
 {% block body %}
 <div id="content">
 
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_errors(form) }}    
 
         <div>
             {{ form_row(form.title, { label: 'Titre du projet' }) }}
@@ -19,7 +20,7 @@
 
         <br>
 
-        <button class="button button-submit">Continuer</button>
+        <button type="submit" class="button button-submit">Continuer</button>
 
     {{ form_end(form) }}
 

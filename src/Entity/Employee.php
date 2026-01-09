@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 class Employee
@@ -18,18 +19,35 @@ class Employee
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le prénom est obligatoire.")] 
+    #[Assert\Length(
+        min: 2, 
+        max: 255, 
+        minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.", 
+        maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")] 
+    #[Assert\Length(
+        min: 2, 
+        max: 255, 
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.", 
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "L'email est obligatoire.")] 
+    #[Assert\Email(message: "L'adresse email n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message: "La date d'entrée est obligatoire.")] 
+    #[Assert\LessThanOrEqual("today", message: "La date d'entrée ne peut pas être postérieure à aujourd'hui.")]
     private ?\DateTimeInterface $entryDate = null;
 
     #[ORM\Column(type: 'string', enumType: EmployeeStatus::class)]
+    #[Assert\NotBlank(message: "Le statut est obligatoire.")]
     private ?EmployeeStatus $status = null;
 
     /**
@@ -60,7 +78,7 @@ class Employee
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): static
+    public function setFirstname(?string $firstname): static
     {
         $this->firstname = $firstname;
 
@@ -72,7 +90,7 @@ class Employee
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
@@ -84,7 +102,7 @@ class Employee
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
@@ -96,7 +114,7 @@ class Employee
         return $this->entryDate;
     }
 
-    public function setEntryDate(\DateTimeInterface $entryDate): static
+    public function setEntryDate(?\DateTimeInterface $entryDate): static
     {
         $this->entryDate = $entryDate;
 
@@ -108,7 +126,7 @@ class Employee
         return $this->status;
     }
 
-    public function setStatus(EmployeeStatus $status): static
+    public function setStatus(?EmployeeStatus $status): static
     {
         $this->status = $status;
 
@@ -122,11 +140,12 @@ class Employee
     {
         $firstInitial = $this->firstname ? mb_strtoupper(mb_substr($this->firstname, 0, 1)) : '';
         $lastInitial = $this->lastname ? mb_strtoupper(mb_substr($this->lastname, 0, 1)) : '';
-        
+
         return $firstInitial . $lastInitial;
     }
 
     /**
+     * Retourne les projets associés à l'employé.
      * @return Collection<int, Project>
      */
     public function getProjects(): Collection
@@ -134,6 +153,9 @@ class Employee
         return $this->projects;
     }
 
+    /** 
+     * Ajoute un projet à l'employé.
+     */
     public function addProject(Project $project): static
     {
         if (!$this->projects->contains($project)) {
@@ -144,6 +166,9 @@ class Employee
         return $this;
     }
 
+    /** 
+     * Retire un projet de l'employé.
+     */
     public function removeProject(Project $project): static
     {
         if ($this->projects->removeElement($project)) {
@@ -154,6 +179,7 @@ class Employee
     }
 
     /**
+     * Retourne les tâches assignées à l'employé.
      * @return Collection<int, Task>
      */
     public function getTasks(): Collection
@@ -171,6 +197,9 @@ class Employee
         return $this;
     }
 
+    /** 
+     * Retire une tâche de l'employé.
+     */
     public function removeTask(Task $task): static
     {
         if ($this->tasks->removeElement($task)) {

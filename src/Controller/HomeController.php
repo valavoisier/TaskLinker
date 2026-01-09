@@ -9,6 +9,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
+    /**  
+     * la page d'accueil avec la liste des projets non archivés 
+     */
     #[Route('/', name: 'app_home')]
     public function index(ProjectRepository $projectRepository): Response
     {

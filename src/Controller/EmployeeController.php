@@ -13,6 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class EmployeeController extends AbstractController
 {
+    /**
+     * Liste des employés
+     */
     #[Route('/employee', name: 'employee_index')]
     public function index(EmployeeRepository $employeeRepository): Response
     {
@@ -22,6 +25,9 @@ final class EmployeeController extends AbstractController
         ]);
     }
 
+    /**
+     * Vue d'un employé
+     */
     #[Route('/employees/{id}', name: 'employee_view', requirements: ['id' => '\d+'])]
     public function view(Employee $employee): Response
     {
@@ -31,6 +37,9 @@ final class EmployeeController extends AbstractController
         ]);
     }
 
+    /**     
+     * Ajouter un employé
+     */
     #[Route('/employee/edit/{id}', name: 'employee_edit')] public function edit(Request $request, Employee $employee, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(EmployeeType::class, $employee);
@@ -39,9 +48,12 @@ final class EmployeeController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('employee_index');
         }
-        return $this->render('employee/edit.html.twig', ['form' => $form->createView(), 'employee' => $employee, 'active_menu' => 'employes',]);
+        return $this->render('employee/edit.html.twig', ['form' => $form, 'employee' => $employee, 'active_menu' => 'employes',]);
     }
 
+    /**   
+     * Supprimer un employé
+     */
     #[Route('/employee/delete/{id}', name: 'employee_delete', methods: ['POST'])] public function delete(Request $request, Employee $employee, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete_employee_' . $employee->getId(), $request->request->get('_token'))) {

@@ -25,7 +25,7 @@ class TaskType extends AbstractType
             ])
             ->add('employee', EntityType::class, [
                 'class' => Employee::class,
-                'choices' => $options['project'] ? $options['project']->getEmployees() : [],                
+                'choices' => $options['project'] ? $options['project']->getEmployees() : [], // Limite les employés au projet courant               
                 'choice_label' => function (Employee $employee) {
                     return $employee->getFirstname() . ' ' . $employee->getLastname();
                 },
@@ -38,7 +38,7 @@ class TaskType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
-            'project' => null,
+            'project' => null,// Ajout de l'option 'project' pour passer le projet courant
         ]);
     }
 }

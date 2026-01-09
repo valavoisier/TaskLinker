@@ -19,7 +19,7 @@ class EmployeeType extends AbstractType
             ->add('email')
             ->add('entryDate')
             ->add('status', ChoiceType::class, [
-                'choices' => EmployeeStatus::cases(), 
+                'choices' => EmployeeStatus::cases(), // Utilisation de l'énumération pour les choix
                 'choice_label' => fn(EmployeeStatus $choice) => $choice->getLabel(),
             ])
             ;
