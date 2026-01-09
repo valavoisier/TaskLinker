@@ -40,11 +40,12 @@ final class ProjectFactory extends PersistentProxyObjectFactory
      */
     protected function initialize(): static
     {
+        //ajoute des employés aléatoires à chaque projet créé
         return $this
             ->afterInstantiate(function(Project $project): void {
-                $employees = EmployeeFactory::randomSet(self::faker()->numberBetween(2, 5));
+                $employees = EmployeeFactory::randomSet(self::faker()->numberBetween(2, 5));//entre 2 et 5 employés par projet et randomSet pour éviter les doublons
                 foreach ($employees as $employee) {
-                    $project->addEmployee($employee->_real());
+                    $project->addEmployee($employee->_real());//_real() pour obtenir l'entité Employee réelle
                 }
             })
         ;

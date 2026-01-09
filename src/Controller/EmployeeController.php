@@ -51,15 +51,17 @@ final class EmployeeController extends AbstractController
         return $this->render('employee/edit.html.twig', ['form' => $form, 'employee' => $employee, 'active_menu' => 'employes',]);
     }
 
-    /**   
-     * Supprimer un employé
-     */
-    #[Route('/employee/delete/{id}', name: 'employee_delete', methods: ['POST'])] public function delete(Request $request, Employee $employee, EntityManagerInterface $em): Response
-    {
-        if ($this->isCsrfTokenValid('delete_employee_' . $employee->getId(), $request->request->get('_token'))) {
-            $em->remove($employee);
-            $em->flush();
-        }
-        return $this->redirectToRoute('employee_index');
-    }
+    /** * Supprimer un employé */ 
+    #[Route('/employee/delete/{id}', name: 'employee_delete', methods: ['POST'])] 
+    public function delete(Request $request, Employee $employee, EntityManagerInterface $em): Response 
+    { 
+        if ($this->isCsrfTokenValid('delete_employee_' . $employee->getId(), $request->request->get('_token'))) { 
+            // Retirer l'employé de toutes ses tâches 
+            foreach ($employee->getTasks() as $task) { $task->setEmployee(null); } 
+            // Retirer l'employé de tous ses projets (ManyToMany) 
+            foreach ($employee->getProjects() as $project) { $project->removeEmployee($employee); } 
+            // Supprimer l'employé 
+            $em->remove($employee); $em->flush(); 
+            } 
+            return $this->redirectToRoute('employee_index'); }
 }
