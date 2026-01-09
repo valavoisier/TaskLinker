@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 09 jan. 2026 à 14:01
+-- Généré le : ven. 09 jan. 2026 à 19:01
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -38,7 +38,8 @@ CREATE TABLE `doctrine_migration_versions` (
 --
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
-('DoctrineMigrations\\Version20260103143656', '2026-01-03 15:37:57', 223);
+('DoctrineMigrations\\Version20260103143656', '2026-01-03 15:37:57', 223),
+('DoctrineMigrations\\Version20260109174840', '2026-01-09 18:49:10', 120);
 
 -- --------------------------------------------------------
 
@@ -60,7 +61,6 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`id`, `firstname`, `lastname`, `email`, `entry_date`, `status`) VALUES
-(41, 'Augustin', 'Boulay', 'guy05@example.com', '2024-03-29', 'freelance'),
 (42, 'François', 'Carre', 'christiane.chauveau@example.com', '2024-04-28', 'freelance'),
 (43, 'Olivier', 'Duhamel', 'boulanger.sebastien@example.com', '2022-04-04', 'cdd'),
 (44, 'René', 'Perrier', 'morel.thibaut@example.org', '2021-07-20', 'cdi'),
@@ -112,7 +112,7 @@ CREATE TABLE `project` (
 --
 
 INSERT INTO `project` (`id`, `title`, `archived`) VALUES
-(11, 'TaskLinker', 0),
+(11, 'TaskLinkers', 0),
 (12, 'Site vitrine Les Soeurs Marchand', 0),
 (13, 'Quibusdam natus sequi sequi culpa.', 1),
 (17, 'Ducimus fugiat quis commodi.', 1),
@@ -122,7 +122,7 @@ INSERT INTO `project` (`id`, `title`, `archived`) VALUES
 (21, 'Mon Nouveau Projet Walwebcreation', 0),
 (23, 'projet de l\'année 2025', 1),
 (24, 'projet 2026', 0),
-(25, 'Prospection en soirée', 0);
+(25, 'Prospection en soirée', 1);
 
 -- --------------------------------------------------------
 
@@ -155,7 +155,6 @@ INSERT INTO `project_employee` (`project_id`, `employee_id`) VALUES
 (17, 43),
 (17, 44),
 (17, 48),
-(18, 41),
 (18, 43),
 (18, 53),
 (18, 58),
@@ -164,14 +163,12 @@ INSERT INTO `project_employee` (`project_id`, `employee_id`) VALUES
 (19, 53),
 (19, 57),
 (19, 59),
-(20, 41),
 (20, 42),
 (20, 46),
 (21, 43),
 (21, 51),
 (21, 53),
 (21, 58),
-(23, 41),
 (23, 42),
 (23, 43),
 (24, 44),
@@ -224,30 +221,30 @@ INSERT INTO `task` (`id`, `project_id`, `employee_id`, `title`, `description`, `
 (75, 13, 51, 'Qui ut doloribus ullam voluptate.', 'Hic deleniti animi similique repudiandae nisi id. Sit eius a id optio accusantium aliquam sunt. Aliquid fuga iusto necessitatibus et veritatis laborum placeat necessitatibus. Asperiores vel sed pariatur dolor.', NULL, 'done'),
 (76, 12, 53, 'Aperiam sed non et.', 'Illo sit consequuntur minima. Error aut voluptatem sed ad dolorem quae velit numquam. Sed eos sit in.', '2026-03-22', 'done'),
 (77, 12, 54, 'Sint quia saepe similique.', 'Similique nobis quia voluptate itaque. Et quod accusantium occaecati sit. Voluptatem vitae autem minus rerum.', NULL, 'doing'),
-(78, 18, 41, 'Provident ea vel non.', 'In magnam sint consequatur. Ut velit quasi doloremque tempore. Et explicabo omnis nesciunt corrupti. Quasi quo nihil incidunt iste.', '2026-04-19', 'todo'),
+(78, 18, NULL, 'Provident ea vel non.', 'In magnam sint consequatur. Ut velit quasi doloremque tempore. Et explicabo omnis nesciunt corrupti. Quasi quo nihil incidunt iste.', '2026-04-19', 'todo'),
 (80, 13, 56, 'Enim velit voluptatibus nulla inventore.', 'Quia laudantium et exercitationem et optio. Voluptas ut quo dicta id qui assumenda. Ea ut enim reprehenderit repudiandae. Inventore eveniet et corrupti qui sint qui dolorum corporis. Tempora optio alias aut quibusdam vel itaque.', NULL, 'done'),
 (82, 13, 59, 'Dolor vitae ea iure.', 'Soluta vel in fuga fugit officiis modi dolor. Architecto et aperiam impedit. Voluptas facere non vel veritatis nesciunt.', '2026-04-08', 'done'),
-(83, 18, 41, 'Exercitationem animi quia numquam inventore.', 'Sapiente eius enim nostrum eligendi fuga et. Repellat sunt voluptatem aliquam qui non corporis.', '2026-03-17', 'doing'),
+(83, 18, NULL, 'Exercitationem animi quia numquam inventore.', 'Sapiente eius enim nostrum eligendi fuga et. Repellat sunt voluptatem aliquam qui non corporis.', '2026-03-17', 'doing'),
 (85, 12, 44, 'Quia saepe impedit.', 'Facere ab quo dignissimos dolore omnis repellendus. Maiores modi facilis et similique ut. Doloribus rerum vel sit sint. Autem ad dolore impedit ut doloribus occaecati. Molestias consectetur occaecati tenetur.', NULL, 'done'),
 (86, 19, NULL, 'Incidunt qui eum aperiam.', 'Libero sed inventore eos atque ipsam magni quia. Qui repellat temporibus quasi.', '2026-04-28', 'todo'),
 (87, 11, 56, 'Et optio laborum minus.', 'Soluta et eligendi natus temporibus delectus praesentium in. Eos ipsa beatae quod hic earum occaecati dolores. Dolores non itaque sed laboriosam quis et earum molestias. Iste non omnis unde id rem necessitatibus. Est magni iure inventore nobis.', NULL, 'todo'),
-(92, 20, 41, 'Et eos quis sequi.', 'Ut incidunt repellat est ut dolores. Incidunt eligendi et consectetur impedit et. Omnis alias qui quia delectus vel.', NULL, 'doing'),
+(92, 20, NULL, 'Et eos quis sequi.', 'Ut incidunt repellat est ut dolores. Incidunt eligendi et consectetur impedit et. Omnis alias qui quia delectus vel.', NULL, 'doing'),
 (93, 11, 57, 'Repellendus aliquid eius id et incidunt.', 'Architecto non tempora et cupiditate veritatis dolor maxime. At soluta autem ut et tempore eum. Error a eius id.', NULL, 'todo'),
 (95, 18, 43, 'Aliquam ut et molestiae vitae.', 'Molestiae exercitationem velit corrupti. Aut vitae odio itaque voluptatibus ipsa ut veniam non.', NULL, 'doing'),
 (96, 12, 44, 'In perferendis enim incidunt qui qui.', 'Omnis ut quibusdam eos perferendis ut iste ex. Magni ut veritatis voluptatibus officia fuga temporibus. Itaque sit ipsum rem quo. Quia non suscipit natus et laborum similique cumque et.', '2026-05-24', 'todo'),
 (98, 20, 46, 'Iusto non laudantium aut.', 'Nemo ducimus ab ea iure et molestias. Recusandae qui quis quia repudiandae voluptatem molestiae. Nisi sapiente cum aut error odit distinctio adipisci.', '2026-04-27', 'doing'),
 (99, 18, 58, 'Harum magni sint optio sint eligendi.', 'Libero est hic sapiente omnis porro necessitatibus omnis. Facilis inventore dolorem autem quia dolores quia illo. Consequuntur ea sed dolorem autem fuga exercitationem. Doloremque modi vero soluta sed earum facere.', '2026-04-16', 'doing'),
 (100, 17, 44, 'Aut quas est.', 'Exercitationem velit et qui est sed. Debitis eaque omnis iusto sapiente. Dolor blanditiis excepturi quae recusandae nam molestiae doloribus. Sed et dicta ratione ex sed.', NULL, 'doing'),
-(101, 20, 41, 'Refonte Site Abeille', 'nouvelle interface site abeille asurances', '2026-01-06', 'todo'),
+(101, 20, NULL, 'Refonte Site Abeille', 'nouvelle interface site abeille asurances', '2026-01-06', 'todo'),
 (106, 21, 51, 'tache 3', 'portfolio', '2026-01-07', 'todo'),
 (107, 21, 58, 'tache 4', 'mise en production', '2026-01-07', 'todo'),
 (108, 21, 43, 'tache 1', 'etude de projet', '2026-01-02', 'done'),
 (109, 21, 53, 'Tache 2', 'integration maquette', '2026-01-04', 'doing'),
-(110, 23, 41, 'bilan annuel', 'reunion', '2025-12-31', 'todo'),
-(111, 24, 44, 'nouvelle tache', 'faire un rapport', '2026-01-08', 'todo'),
+(110, 23, NULL, 'bilan annuel', 'reunion', '2025-12-31', 'todo'),
 (112, 25, 49, 'tache du soir', 'telephoner aux prospects', '2026-01-08', 'todo'),
 (113, 25, 46, 'rapport  d\'analyse', 'analyser réponses', '2026-01-09', 'todo'),
-(114, 25, 46, 'liste prospects', 'préparer listing', '2026-01-06', 'doing');
+(114, 25, 46, 'liste prospects', 'préparer listing', '2026-01-06', 'doing'),
+(115, 11, NULL, 'new', 'zzzfze', '2026-01-16', 'doing');
 
 --
 -- Index pour les tables déchargées
@@ -320,7 +317,7 @@ ALTER TABLE `project`
 -- AUTO_INCREMENT pour la table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 
 --
 -- Contraintes pour les tables déchargées
@@ -337,8 +334,8 @@ ALTER TABLE `project_employee`
 -- Contraintes pour la table `task`
 --
 ALTER TABLE `task`
-  ADD CONSTRAINT `FK_527EDB25166D1F9C` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_527EDB258C03F15C` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`);
+  ADD CONSTRAINT `FK_527EDB25166D1F9C` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`),
+  ADD CONSTRAINT `FK_527EDB258C03F15C` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
