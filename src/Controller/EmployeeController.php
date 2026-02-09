@@ -13,6 +13,20 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class EmployeeController extends AbstractController
 {
+    #[Route('/bienvenue', name: 'app_bienvenue')]
+    public function bienvenue(): Response
+    {
+        return $this->render('auth/bienvenue.html.twig');
+    }
+
+    #[Route('/inscription', name: 'app_register')]
+    public function register(Request $request, EntityManagerInterface $em): Response
+    {
+        // Logique d'inscription (formulaire, validation, etc.)
+        // ...
+
+        return $this->render('auth/register.html.twig');
+    }
     /**
      * Liste des employés
      */
