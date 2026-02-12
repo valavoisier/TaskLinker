@@ -86,7 +86,36 @@ header {
 
 div#current-user {
     height: 55px;
+    position: relative;
+    width: 100%;
 }
+
+div#current-user a.user-avatar {
+    position: absolute;
+    right: 80px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar {
+    width: 55px;
+    height: 55px;
+    border: solid 1px #1C5B50;
+    border-radius: 50%;
+    background: #fff;
+    color: #1C5B50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+a.user-avatar {
+    text-decoration: none;
+}
+
 
 div#title-page h1 {
     font-family: Manrope;

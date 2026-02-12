@@ -30,7 +30,13 @@
         <main>
 
             <header>
-                <div id="current-user"></div>
+                <div id="current-user">
+                    {% if app.user %} 
+                        <a href="{{ path('app_logout') }}" class="user-avatar"> 
+                            {{ app.user.initials }} 
+                        </a>
+                    {% endif %}
+                </div>
 
                 <div id="title-page">
                     <div class="flex-header"> 
@@ -54,7 +60,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    {# Ton JS perso #}
+    {# JS perso #}
     <script src="{{ asset('js/select.js') }}"></script>
 
 </body>

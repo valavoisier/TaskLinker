@@ -10,8 +10,9 @@
     <table id="team-container">
         <thead>
             <tr>
-                <th>Prénom, Nom</th>
+                <th>Prénom, Nom, Email</th>
                 <th>Statut</th>
+                <th>Rôle</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,9 +32,8 @@
                         </div>
                     </div>
                 </td>
-
                 <td>{{ employee.status.getLabel() }}</td>
-
+                
                 <td>
                     <a class="button button-edit-team" href="{{ path('employee_edit', { id: employee.id }) }}">
                         Éditer
@@ -49,7 +49,6 @@
                         action="{{ path('employee_delete', { id: employee.id }) }}" method="post" style="display:none;">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete_employee_' ~ employee.id) }}">
                     </form>
-
                 </td>
             </tr>
             {% endfor %}
