@@ -18,15 +18,7 @@ final class EmployeeController extends AbstractController
     {
         return $this->render('auth/bienvenue.html.twig');
     }
-
-    #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, EntityManagerInterface $em): Response
-    {
-        // Logique d'inscription (formulaire, validation, etc.)
-        // ...
-
-        return $this->render('auth/register.html.twig');
-    }
+    
     /**
      * Liste des employés
      */
