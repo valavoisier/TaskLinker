@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Employee;
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,6 +15,22 @@ class ProjectRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Project::class);
+    }
+
+    public function findAccessibleProjects(Employee $user): array 
+    { 
+        $qb = $this->createQueryBuilder('p')
+         ->andWhere('p.archived = false'); 
+         // Admin → accès à tout 
+         if (in_array('ROLE_ADMIN', $user->getRoles(), true)) { 
+            return $qb->getQuery()->getResult(); 
+         } 
+         // Collaborateur → uniquement les projets auxquels il est assigné 
+         return $qb 
+            ->join('p.employees', 'e') 
+            ->andWhere('e = :user') 
+            ->setParameter('user', $user) 
+            ->getQuery() ->getResult(); 
     }
 
     //    /**

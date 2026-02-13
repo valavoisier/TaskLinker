@@ -19,6 +19,8 @@ final class TaskController extends AbstractController
     #[Route('/project/{id}/task/add', name: 'task_add', requirements: ['id' => '\d+'])]
     public function add(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Vérification d'accès 
+        $this->denyAccessUnlessGranted('PROJECT_EDIT', $project);
         $task = new Task();
         $task->setProject($project);
         $form = $this->createForm(TaskType::class, $task, [
@@ -43,6 +45,8 @@ final class TaskController extends AbstractController
     public function edit(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
         $project = $task->getProject();// Récupère le projet associé à la tâche
+        // Vérification d'accès 
+        $this->denyAccessUnlessGranted('PROJECT_EDIT', $project);
         $form = $this->createForm(TaskType::class, $task, ['project' => $project, // On passe le projet au formulaire 
         ]);
         $form->handleRequest($request);
@@ -65,8 +69,9 @@ final class TaskController extends AbstractController
     #[Route('/task/{id}/delete', name: 'task_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Task $task, EntityManagerInterface $entityManager): Response
     {
+        // Vérification d'accès via le Voter 
+        $this->denyAccessUnlessGranted('PROJECT_EDIT', $task->getProject());
         $projectId = $task->getProject()->getId();
-
         $entityManager->remove($task);
         $entityManager->flush();
 

@@ -22,7 +22,7 @@ final class ProjectController extends AbstractController
     public function index(ProjectRepository $projectRepository): Response
     {
         return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findBy(['archived' => false]),
+            'projects' => $projectRepository->findAccessibleProjects($this->getUser()),
             'active_menu' => 'projets',
         ]);
     }
@@ -63,6 +63,13 @@ final class ProjectController extends AbstractController
     #[Route('/project/{id}', name: 'project_view', requirements: ['id' => '\d+'])]
     public function view(Project $project): Response
     {
+        /* Vérifier que l'utilisateur fait partie des employés du projet
+        $currentUser = $this->getUser();
+        if (!$project->getEmployees()->contains($currentUser)) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce projet.');
+        }*/
+        $this->denyAccessUnlessGranted('PROJECT_VIEW', $project);
+
         $todoTasks = [];
         $doingTasks = [];
         $doneTasks = [];
