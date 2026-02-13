@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Enum\TaskStatus;
 use App\Form\ProjectType;
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ProjectController extends AbstractController
 {
@@ -17,9 +18,12 @@ final class ProjectController extends AbstractController
      * Liste des projets (redirection vers la page d'accueil)
      */
     #[Route('/project', name: 'app_project')]
-    public function index(): Response
+    public function index(ProjectRepository $projectRepository): Response
     {
-        return $this->redirectToRoute('app_home');
+        return $this->render('project/index.html.twig', [
+            'projects' => $projectRepository->findBy(['archived' => false]),
+            'active_menu' => 'projets',
+        ]);
     }
 
     /** 

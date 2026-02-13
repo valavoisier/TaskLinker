@@ -12,13 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class EmployeeController extends AbstractController
-{
-    #[Route('/bienvenue', name: 'app_bienvenue')]
-    public function bienvenue(): Response
-    {
-        return $this->render('auth/bienvenue.html.twig');
-    }
-    
+{   
     /**
      * Liste des employés
      */
