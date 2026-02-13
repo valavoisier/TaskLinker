@@ -36,6 +36,7 @@ final class EmployeeFactory extends PersistentProxyObjectFactory
             'email' => self::faker()->unique()->safeEmail(),
             'entryDate' => self::faker()->dateTimeBetween('-5 years', 'now'),
             'status' => self::faker()->randomElement(EmployeeStatus::cases()),
+            'password' => 'hashed_password', // Mot de passe par défaut (sera haché si nécessaire)
         ];
     }
 
@@ -45,7 +46,12 @@ final class EmployeeFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Employee $employee): void {})
+            ->afterInstantiate(function(Employee $employee): void {
+                // Définir un rôle par défaut si aucun rôle n'est défini
+                // 20% de chance d'être admin, 80% d'être user
+                $isAdmin = self::faker()->boolean(20);
+                $employee->setMainRole($isAdmin ? 'ROLE_ADMIN' : 'ROLE_USER');
+            })
         ;
     }
 }

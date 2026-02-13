@@ -16,7 +16,7 @@ final class TaskController extends AbstractController
     /** 
      * Ajouter une tâche à un projet
      */
-    #[Route('/project/{id}/task/add', name: 'task_add')]
+    #[Route('/project/{id}/task/add', name: 'task_add', requirements: ['id' => '\d+'])]
     public function add(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
         $task = new Task();
@@ -39,7 +39,7 @@ final class TaskController extends AbstractController
     /** 
      * Éditer une tâche
      */
-    #[Route('/task/{id}/edit', name: 'task_edit')] 
+    #[Route('/task/{id}/edit', name: 'task_edit', requirements: ['id' => '\d+'])] 
     public function edit(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     {
         $project = $task->getProject();// Récupère le projet associé à la tâche
@@ -62,7 +62,7 @@ final class TaskController extends AbstractController
     /** 
      * Supprimer une tâche
      */
-    #[Route('/task/{id}/delete', name: 'task_delete', methods: ['POST'])]
+    #[Route('/task/{id}/delete', name: 'task_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Task $task, EntityManagerInterface $entityManager): Response
     {
         $projectId = $task->getProject()->getId();

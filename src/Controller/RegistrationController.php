@@ -22,6 +22,7 @@ class RegistrationController extends AbstractController
         // Utiliser la date du jour à minuit afin qu’elle ne soit pas considérée comme “postérieure à aujourd’hui” par le validateur
         $user->setEntryDate(new \DateTime('today'));
         $user->setStatus(EmployeeStatus::CDI);
+        $user->setMainRole('ROLE_USER'); // Rôle par défaut pour les nouveaux inscrits
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -39,7 +40,7 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_bienvenue');
+            return $this->redirectToRoute('project_index');
         }
 
         return $this->render('registration/register.html.twig', [

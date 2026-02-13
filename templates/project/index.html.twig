@@ -16,7 +16,8 @@
             {# --- ARCHIVE LINK  #} 
             <a href="#" onclick="event.preventDefault(); if(confirm('Archiver ce projet ?')) { document.getElementById('archive-project-{{ project.id }}').submit(); }">
                 <i class="fa-solid fa-trash"></i> 
-            </a> {# --- INVISIBLE FORM FOR ARCHIVE (POST + CSRF) --- #} 
+            </a> 
+            {# --- INVISIBLE FORM FOR ARCHIVE (POST + CSRF) --- #} 
             <form id="archive-project-{{ project.id }}" action="{{ path('project_archive', { id: project.id }) }}"  method="post" style="display:none;"> 
                 <input type="hidden" name="_token" value="{{ csrf_token('archive_project_' ~ project.id) }}"> 
             </form>
@@ -24,11 +25,13 @@
     </article>
     {% endfor %}
     {# Carte "Ajouter un projet" #}
-    <article class="card-project">
-        <a href="{{ path('project_add') }}">
-            <i class="fa-solid fa-circle-plus add-project-icon"></i>
-            <h2>Ajouter un projet</h2>
-        </a>
-    </article>
+    {% if is_granted('ROLE_ADMIN') %}
+        <article class="card-project">
+            <a href="{{ path('project_add') }}">
+                <i class="fa-solid fa-circle-plus add-project-icon"></i>
+                <h2>Ajouter un projet</h2>
+            </a>
+        </article>
+    {% endif %}
 </div>
 {% endblock %}

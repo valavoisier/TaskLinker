@@ -27,7 +27,16 @@ class EmployeeType extends AbstractType
                 'choices' => EmployeeStatus::cases(), // Utilisation de l'énumération pour les choix
                 'choice_label' => fn(EmployeeStatus $choice) => $choice->getLabel(),
             ])
-            ;
+            ->add('mainRole', ChoiceType::class, [
+                'label' => 'Rôle',
+                'choices' => [
+                    'Collaborateur' => 'ROLE_USER',
+                    'Chef de projet' => 'ROLE_ADMIN',
+                ],
+                'expanded' => false,  // menu déroulant
+                'multiple' => false,  // un seul rôle possible
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

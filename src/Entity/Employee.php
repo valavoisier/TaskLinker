@@ -185,10 +185,38 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param list<string> $roles
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array|string $roles): static
     {
+        // Si un seul rôle est envoyé (string), on le transforme en tableau 
+        if (is_string($roles)) { 
+            $roles = [$roles];
+            }
         $this->roles = $roles;
+        return $this;
+    }
 
+    /**
+     * Retourne le rôle principal (pour le formulaire)
+     * Retourne ROLE_ADMIN si présent, sinon ROLE_USER
+     * string car on veut un seul rôle pour le formulaire, même si en base on peut en avoir plusieurs (ex: ROLE_ADMIN et ROLE_USER)
+     */
+    public function getMainRole(): string
+    {
+        return in_array('ROLE_ADMIN', $this->roles) ? 'ROLE_ADMIN' : 'ROLE_USER';
+    }
+
+    /**
+     * Définit le rôle principal (pour le formulaire)
+     * Si ROLE_ADMIN est sélectionné, on met ROLE_ADMIN en base, sinon ROLE_USER
+     * string car on reçoit un seul rôle du formulaire, même si en base on peut en avoir plusieurs (ex: ROLE_ADMIN et ROLE_USER)
+     */
+    public function setMainRole(string $role): static
+    {
+        if ($role === 'ROLE_ADMIN') {
+            $this->roles = ['ROLE_ADMIN'];
+        } else {
+            $this->roles = ['ROLE_USER'];
+        }
         return $this;
     }
 
@@ -212,10 +240,35 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function __serialize(): array
     {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        return [
+            'id' => $this->id,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'email' => $this->email,
+            'entryDate' => $this->entryDate,
+            'status' => $this->status,
+            'roles' => $this->roles,
+            'password' => hash('crc32c', $this->password),
+        ];
+    }
 
-        return $data;
+    /**
+     * Restore the user from serialized data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->firstname = $data['firstname'];
+        $this->lastname = $data['lastname'];
+        $this->email = $data['email'];
+        $this->entryDate = $data['entryDate'];
+        $this->status = $data['status'];
+        $this->roles = $data['roles'];
+        $this->password = $data['password'];
+        
+        // Réinitialiser les collections
+        $this->projects = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     #[\Deprecated]

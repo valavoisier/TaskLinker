@@ -1,21 +1,22 @@
 <nav>
-    <a href="{{ path('app_home') }}" id="logo">
+    <a href="{{ path('project_index') }}" id="logo">
         <img src="{{ asset('img/logo.png') }}" alt="Logo TaskLinker" />
     </a>
 
     <ul id="main-menu">
 
         <li class="{{ active_menu == 'projets' ? 'active' : '' }}">
-            <a href="{{ path('app_home') }}">
+            <a href="{{ path('project_index') }}">
                 <i class="fa-solid fa-list-check"></i> Projets
             </a>
         </li>
-
-        <li class="{{ active_menu == 'employes' ? 'active' : '' }}">
-            <a href="{{ path('employee_index') }}">
-                <i class="fa-regular fa-user"></i> Équipe
-            </a>
-        </li>
+        {% if is_granted('ROLE_ADMIN') %}
+            <li class="{{ active_menu == 'employes' ? 'active' : '' }}">
+                <a href="{{ path('employee_index') }}">
+                    <i class="fa-regular fa-user"></i> Équipe
+                </a>
+            </li>
+        {% endif %}
 
     </ul>
 </nav>

@@ -33,7 +33,7 @@
                     </div>
                 </td>
                 <td>{{ employee.status.getLabel() }}</td>
-                
+                <td>{% if 'ROLE_ADMIN' in employee.roles %}Chef de projet{% else %}Collaborateur{% endif %}</td>
                 <td>
                     <a class="button button-edit-team" href="{{ path('employee_edit', { id: employee.id }) }}">
                         Éditer
