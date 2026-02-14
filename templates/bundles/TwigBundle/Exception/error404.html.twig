@@ -1,0 +1,10 @@
+{% extends 'auth/base-logout.html.twig' %}
+
+{% block body %}
+
+<h1>Erreur 404</h1>
+<p class="subtitle">Désolé cette page n'existe pas</p>
+
+<a href="{{ app.request.headers.get('referer') ?? path('project_index') }}" class="button login-button"> Retour </a>
+
+{% endblock %}

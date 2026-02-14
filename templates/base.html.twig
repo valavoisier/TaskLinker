@@ -45,6 +45,14 @@
 
                         {# Avatars + bouton Modifier (optionnel/projets) #}
                         {% block page_actions %}{% endblock %}
+
+                        {% for message in app.flashes('error') %} 
+                            
+                                <div class="alert alert-danger"> 
+                                    {{ message }} 
+                                </div> 
+                             
+                        {% endfor %}
                     </div>
                 </div>
             </header>

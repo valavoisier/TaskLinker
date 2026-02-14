@@ -126,6 +126,15 @@ div#title-page h1 {
     margin: 0;
 }
 
+.alert-danger { 
+    background-color: #fff; 
+    color: red; 
+    border: 2px solid red; 
+    padding: 12px 16px; 
+    border-radius: 6px; 
+    margin-bottom: 15px; 
+    font-size: 15px; }
+
 div#content {
     padding: 45px 80px;
 }
