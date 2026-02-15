@@ -126,8 +126,11 @@ Après avoir chargé les fixtures :
 2. **Configurez la 2FA** :
    - Une popup apparaîtra vous invitant à activer la 2FA
    - Scannez le QR code avec Google Authenticator
+   - **Alternative** : Utilisez l'outil en ligne [https://totp.danhersam.com/](https://totp.danhersam.com/) pour générer des codes TOTP sans installer d'application mobile
    - Entrez le code à 6 chiffres pour valider
 3. À la prochaine connexion, entrez votre code 2FA
+
+> **💡 Astuce** : Si vous n'avez pas de smartphone, vous pouvez utiliser [totp.danhersam.com](https://totp.danhersam.com/) en copiant le secret TOTP affiché lors de la configuration 2FA.
 
 ### Rôles et permissions
 
