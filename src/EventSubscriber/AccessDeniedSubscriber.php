@@ -44,7 +44,7 @@ class AccessDeniedSubscriber implements EventSubscriberInterface
 
         // Ajouter un message flash via la session
         $session = $this->requestStack->getSession();
-        $session->set('_security.access_denied_error', 'Vous n\'avez pas accès à cette ressource.');
+        $session->getFlashBag()->add('error', 'Vous n\'avez pas accès à cette ressource.');
 
         $url = $this->router->generate('project_index');
         $event->setResponse(new RedirectResponse($url));
