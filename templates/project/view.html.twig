@@ -35,7 +35,7 @@
         <div class="tasks-list">
 
             {% for task in todoTasks %}
-            <a class="task" href="{{ path('task_edit', { id: task.id }) }}">
+            <a class="task" {% if is_granted('TASK_EDIT', task) %}href="{{ path('task_edit', { id: task.id }) }}"{% endif %}>
                 <h3>{{ task.title }}</h3>
                 <p>{{ task.description }}</p>
 
@@ -55,9 +55,11 @@
             </a>
             {% endfor %}
 
+            {% if is_granted('PROJECT_EDIT', project) %}
             <a href="{{ path('task_add', { id: project.id }) }}" class="task-add">
                 + Ajouter une tâche
             </a>
+            {% endif %}
         </div>
     </div>
 
@@ -67,7 +69,7 @@
         <div class="tasks-list">
 
             {% for task in doingTasks %}
-            <a class="task" href="{{ path('task_edit', { id: task.id }) }}">
+            <a class="task" {% if is_granted('TASK_EDIT', task) %}href="{{ path('task_edit', { id: task.id }) }}"{% endif %}>
                 <h3>{{ task.title }}</h3>
                 <p>{{ task.description }}</p>
 
@@ -87,9 +89,11 @@
             </a>
             {% endfor %}
 
+            {% if is_granted('PROJECT_EDIT', project) %}
             <a href="{{ path('task_add', { id: project.id }) }}" class="task-add">
                 + Ajouter une tâche
             </a>
+            {% endif %}
         </div>
     </div>
 
@@ -99,7 +103,7 @@
         <div class="tasks-list">
 
             {% for task in doneTasks %}
-            <a class="task" href="{{ path('task_edit', { id: task.id }) }}">
+            <a class="task" {% if is_granted('TASK_EDIT', task) %}href="{{ path('task_edit', { id: task.id }) }}"{% endif %}>
                 <h3>{{ task.title }}</h3>
                 <p>{{ task.description }}</p>
 
@@ -119,9 +123,11 @@
             </a>
             {% endfor %}
 
+            {% if is_granted('PROJECT_EDIT', project) %}
             <a href="{{ path('task_add', { id: project.id }) }}" class="task-add">
                 + Ajouter une tâche
             </a>
+            {% endif %}
         </div>
     </div>
 

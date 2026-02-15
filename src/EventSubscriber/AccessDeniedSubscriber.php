@@ -4,7 +4,7 @@ namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -14,7 +14,7 @@ class AccessDeniedSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private RouterInterface $router,
-        private FlashBagInterface $flashBag
+        private RequestStack $requestStack
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -42,10 +42,9 @@ class AccessDeniedSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->flashBag->add(
-            'error',
-            'Vous n\'avez pas accès à cette ressource.'
-        );
+        // Ajouter un message flash via la session
+        $session = $this->requestStack->getSession();
+        $session->set('_security.access_denied_error', 'Vous n\'avez pas accès à cette ressource.');
 
         $url = $this->router->generate('project_index');
         $event->setResponse(new RedirectResponse($url));

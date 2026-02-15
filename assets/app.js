@@ -1,5 +1,5 @@
 import './stimulus_bootstrap.js';
-import './js/select.js';
+// select.js est chargé séparément dans base.html.twig après jQuery/Select2
 /*
  * Welcome to your app's main JavaScript file!
  *

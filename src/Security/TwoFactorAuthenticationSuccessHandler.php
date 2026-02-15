@@ -10,7 +10,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Redirige vers la configuration 2FA si l'utilisateur n'a pas encore activé la 2FA
+ * Gère la redirection après l'authentification (avec ou sans 2FA)
+ * La popup 2FA s'affichera automatiquement si nécessaire (approche optionnelle)
  */
 class TwoFactorAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
@@ -24,20 +25,12 @@ class TwoFactorAuthenticationSuccessHandler implements AuthenticationSuccessHand
     {
         $user = $token->getUser();
 
-        // Si l'utilisateur est un Employee
-        if ($user instanceof Employee) {
-            // Mode bypass en développement
-            if (isset($_ENV['BYPASS_2FA']) && $_ENV['BYPASS_2FA'] === '1') {
-                return new RedirectResponse($this->urlGenerator->generate('project_index'));
-            }
-
-            // Si la 2FA n'est pas activée, rediriger vers la configuration
-            if (!$user->isGoogleAuthenticatorEnabled()) {
-                return new RedirectResponse($this->urlGenerator->generate('app_2fa_setup'));
-            }
+        // Si l'utilisateur est un Employee en mode bypass développement
+        if ($user instanceof Employee && isset($_ENV['BYPASS_2FA']) && $_ENV['BYPASS_2FA'] === '1') {
+            return new RedirectResponse($this->urlGenerator->generate('project_index'));
         }
 
-        // Sinon, redirection par défaut
+        // Redirection par défaut (la popup 2FA s'affichera si nécessaire)
         return new RedirectResponse($this->urlGenerator->generate('project_index'));
     }
 }

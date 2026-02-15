@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 09 jan. 2026 à 19:01
+-- Généré le : dim. 15 fév. 2026 à 16:01
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -39,7 +39,12 @@ CREATE TABLE `doctrine_migration_versions` (
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
 ('DoctrineMigrations\\Version20260103143656', '2026-01-03 15:37:57', 223),
-('DoctrineMigrations\\Version20260109174840', '2026-01-09 18:49:10', 120);
+('DoctrineMigrations\\Version20260109174840', '2026-01-09 18:49:10', 120),
+('DoctrineMigrations\\Version20260211215431', '2026-02-11 22:54:52', 48),
+('DoctrineMigrations\\Version20260214145208', '2026-02-14 15:52:32', 24),
+('DoctrineMigrations\\Version20260214170000', '2026-02-14 22:25:40', 29),
+('DoctrineMigrations\\Version20260215094759', '2026-02-15 10:48:11', 30),
+('DoctrineMigrations\\Version20260215121415', '2026-02-15 13:23:56', 360);
 
 -- --------------------------------------------------------
 
@@ -53,31 +58,39 @@ CREATE TABLE `employee` (
   `lastname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `entry_date` date NOT NULL,
-  `status` varchar(255) NOT NULL
+  `status` varchar(255) NOT NULL,
+  `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '(DC2Type:json)' CHECK (json_valid(`roles`)),
+  `password` varchar(255) NOT NULL,
+  `google_authenticator_secret` longtext DEFAULT NULL,
+  `is_two_factor_enabled` tinyint(1) NOT NULL,
+  `hide2_faprompt` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `employee`
 --
 
-INSERT INTO `employee` (`id`, `firstname`, `lastname`, `email`, `entry_date`, `status`) VALUES
-(42, 'François', 'Carre', 'christiane.chauveau@example.com', '2024-04-28', 'freelance'),
-(43, 'Olivier', 'Duhamel', 'boulanger.sebastien@example.com', '2022-04-04', 'cdd'),
-(44, 'René', 'Perrier', 'morel.thibaut@example.org', '2021-07-20', 'cdi'),
-(45, 'Valérie', 'Nguyen', 'isabelle49@example.com', '2023-09-14', 'cdi'),
-(46, 'Philippine', 'Delannoy', 'margot63@example.org', '2023-04-15', 'cdi'),
-(47, 'Michelle', 'Barbier', 'adrienne22@example.org', '2022-06-01', 'freelance'),
-(48, 'Christophe', 'Le Roux', 'humbert.louis@example.com', '2023-07-04', 'freelance'),
-(49, 'Yves', 'Jacob', 'salmon.benjamin@example.org', '2022-06-10', 'cdi'),
-(50, 'André', 'Faivre', 'theodore.gosselin@example.net', '2022-05-27', 'cdi'),
-(51, 'Brigitte', 'Noel', 'eherve@example.net', '2023-03-12', 'freelance'),
-(52, 'Tristan', 'Marion', 'boucher.marine@example.net', '2022-03-18', 'cdi'),
-(53, 'Hortense', 'Guillot', 'marianne.ruiz@example.com', '2025-05-11', 'cdi'),
-(54, 'Auguste', 'Regnier', 'fernandez.adelaide@example.com', '2021-09-22', 'freelance'),
-(56, 'Manon', 'Jacquot', 'laine.alain@example.net', '2024-02-18', 'cdd'),
-(57, 'Marcel', 'Bruneau', 'maggie57@example.net', '2025-12-22', 'freelance'),
-(58, 'Élisabeth', 'Dos Santos', 'benjamin43@example.net', '2021-04-14', 'freelance'),
-(59, 'Joseph', 'Lombard', 'toussaint.nath@example.net', '2022-10-17', 'cdd');
+INSERT INTO `employee` (`id`, `firstname`, `lastname`, `email`, `entry_date`, `status`, `roles`, `password`, `google_authenticator_secret`, `is_two_factor_enabled`, `hide2_faprompt`) VALUES
+(42, 'François', 'Carre', 'f.carre@gmail.com', '2024-04-28', 'cdi', '[\"ROLE_ADMIN\"]', '$2y$10$L9FYMBUxlC1bKvWJ0WMA6.mGUX/YI3d.LPFUVM.YokcDyrNZcrszy', NULL, 0, 0),
+(43, 'Olivier', 'Duhamel', 'boulanger.sebastien@example.com', '2022-04-04', 'cdd', '[\"ROLE_USER\"]', '$2y$10$xxfdoa5J/avMzZOeS/Iaj.5ROlSFcq0B7aB506bZl2BiUrWLWYqJm', NULL, 0, 0),
+(44, 'René', 'Perrier', 'morel.thibaut@example.org', '2021-07-20', 'cdi', '[\"ROLE_USER\"]', '$2y$10$woCnTg1M59ahsBVVlFS2M.1AUv2NM5zkzy8DqcrqxTo1DxbU.nF1.', NULL, 0, 0),
+(45, 'Valérie', 'Nguyen', 'isabelle49@example.com', '2023-09-14', 'cdi', '[\"ROLE_USER\"]', '$2y$10$lvOzI6aKsagKxSr8MHPUIeFaSYAmmic7sKqetMT1qwYWzuD1qZQKS', NULL, 0, 0),
+(46, 'Philippine', 'Delannoy', 'margot63@example.org', '2023-04-15', 'cdi', '[\"ROLE_USER\"]', '$2y$10$D0Kw6LQXOGdBxLwH918vJ.i.sLvR3xcnfet8dkQ6qeaoyN2/bivxK', NULL, 0, 0),
+(47, 'Michelle', 'Barbier', 'adrienne22@example.org', '2022-06-01', 'freelance', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3905A.u.Tas0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(48, 'Christophe', 'Le Roux', 'humbert.louis@example.com', '2023-07-04', 'freelance', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3907A.u.Tas0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(49, 'Yves', 'Jacob', 'salmon.benjamin@example.org', '2022-06-10', 'cdi', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JxOoxhWx3905A.u.Taj0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(50, 'André', 'Faivre', 'theodore.gosselin@example.net', '2022-05-27', 'cdi', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3905A.u.Tas0N4gZ3V7p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(51, 'Brigitte', 'Noel', 'eherve@example.net', '2023-03-12', 'freelance', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3905A.u.Tas0N4gZ3N6p0unpaPsfv93CoIHz88K', NULL, 0, 0),
+(52, 'Tristan', 'Marion', 'boucher.marine@example.net', '2022-03-18', 'cdi', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3905A.u.Tas0N4gZ3N6p0inpaPsfv92CoIHz88K', NULL, 0, 0),
+(53, 'Hortense', 'Guillot', 'h.guillot@gmail.com', '2025-05-11', 'cdi', '[\"ROLE_USER\"]', '$2y$10$nGwdzhgEW7SAfTMjPwtT.OEmuGcDpMmaLgIszCUbCXodfEPtPRgVC', NULL, 0, 0),
+(54, 'Auguste', 'Regnier', 'fernandez.adelaide@example.com', '2021-09-22', 'freelance', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3905A.u.Tcv0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(56, 'Manon', 'Jacquot', 'laine.alain@example.net', '2024-02-18', 'cdd', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwWkxhWx3905A.u.Tas0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(57, 'Marcel', 'Bruneau', 'maggie57@example.net', '2025-12-22', 'freelance', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx3905A.u.Tas0N4eV3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(58, 'Élisabeth', 'Dos Santos', 'benjamin43@example.net', '2021-04-14', 'freelance', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOoxhWx4444A.u.Tas0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(59, 'Joseph', 'Lombard', 'toussaint.nath@example.net', '2022-10-17', 'cdd', '[\"ROLE_USER\"]', '$2y$10$8ovYe7JwOomlGt3905A.u.Tas0N4gZ3N6p0unpaPsfv92CoIHz88K', NULL, 0, 0),
+(61, 'Valérie', 'Lavoisier', 'valavoisier@hotmail.fr', '2026-02-12', 'cdi', '[\"ROLE_ADMIN\"]\r\n', '$2y$13$rLlNMD7QCf5NgaLxKM5wXuOlfXsuFLSeHr/AsqeqOV4r0GPakgsz2', 'OXY4iGCMuwAaRTKK67i5k5qDMVZHXepeyRGKmdd5VuRaztLWs0ZhdVV8PVVSBQRfP0mRC8B+vsJ3ve3Nn/eMezC+kE4IBMsRdKb5zmC6g686GPMFBuh0BoGUhp8=', 1, 0),
+(62, 'Ruby', 'Quinsapou', 'ruby@gmail.com', '2026-02-12', 'cdi', '[\"ROLE_USER\"]\r\n', '$2y$13$6qmB8UYi9sTINUiDABmDg.aZ.wi15TpaejEo.4x/kelKnZ66R1qJG', NULL, 0, 1),
+(64, 'Mi', 'Yuyu', 'yuyu@gmail.com', '2026-02-13', 'cdi', '[\"ROLE_USER\"]', '$2y$13$XTE9sLP/MvMXssDvx9pwcOND8rZpfR/KiipZ7.hJEz3ahLzObVOf.', NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -122,7 +135,8 @@ INSERT INTO `project` (`id`, `title`, `archived`) VALUES
 (21, 'Mon Nouveau Projet Walwebcreation', 0),
 (23, 'projet de l\'année 2025', 1),
 (24, 'projet 2026', 0),
-(25, 'Prospection en soirée', 1);
+(25, 'Prospection en soirée', 1),
+(26, 'essai 0226', 1);
 
 -- --------------------------------------------------------
 
@@ -173,8 +187,13 @@ INSERT INTO `project_employee` (`project_id`, `employee_id`) VALUES
 (23, 43),
 (24, 44),
 (24, 45),
+(24, 61),
+(24, 62),
 (25, 46),
-(25, 49);
+(25, 49),
+(26, 61),
+(26, 62),
+(26, 64);
 
 -- --------------------------------------------------------
 
@@ -244,7 +263,10 @@ INSERT INTO `task` (`id`, `project_id`, `employee_id`, `title`, `description`, `
 (112, 25, 49, 'tache du soir', 'telephoner aux prospects', '2026-01-08', 'todo'),
 (113, 25, 46, 'rapport  d\'analyse', 'analyser réponses', '2026-01-09', 'todo'),
 (114, 25, 46, 'liste prospects', 'préparer listing', '2026-01-06', 'doing'),
-(115, 11, NULL, 'new', 'zzzfze', '2026-01-16', 'doing');
+(115, 11, NULL, 'new', 'zzzfze', '2026-01-16', 'doing'),
+(117, 26, 64, 'tache fevrier', 'essai', '2026-02-15', 'doing'),
+(118, 26, 62, 'essai2 fevrier26', 'essai2 fevrier26', '2026-02-15', 'doing'),
+(119, 26, 62, 'sss', 'sssssfsfsfsfs', '2026-02-15', 'todo');
 
 --
 -- Index pour les tables déchargées
@@ -260,7 +282,8 @@ ALTER TABLE `doctrine_migration_versions`
 -- Index pour la table `employee`
 --
 ALTER TABLE `employee`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`);
 
 --
 -- Index pour la table `messenger_messages`
@@ -299,7 +322,7 @@ ALTER TABLE `task`
 -- AUTO_INCREMENT pour la table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT pour la table `messenger_messages`
@@ -311,13 +334,13 @@ ALTER TABLE `messenger_messages`
 -- AUTO_INCREMENT pour la table `project`
 --
 ALTER TABLE `project`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT pour la table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- Contraintes pour les tables déchargées

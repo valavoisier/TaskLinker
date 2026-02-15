@@ -71,4 +71,38 @@ class TwoFactorController extends AbstractController
             'checkPathUrl' => $this->generateUrl('app_2fa_enable'),
         ]);
     }
+
+    #[Route('/2fa/hide-prompt', name: 'app_2fa_hide_prompt', methods: ['POST'])]
+    public function hidePrompt(EntityManagerInterface $em): Response
+    {
+        /** @var Employee $user */
+        $sessionUser = $this->getUser();
+
+        if (!$sessionUser instanceof Employee) {
+            return $this->json(['success' => false, 'error' => 'User not authenticated']);
+        }
+
+        // Recharger l'utilisateur depuis la base pour s'assurer qu'il est géré par Doctrine
+        $user = $em->getRepository(Employee::class)->find($sessionUser->getId());
+        
+        if (!$user) {
+            return $this->json(['success' => false, 'error' => 'User not found in database']);
+        }
+
+        $before = $user->getHide2FAPrompt();
+        $user->setHide2FAPrompt(true);
+        $after = $user->getHide2FAPrompt();
+        
+        // Forcer Doctrine à recalculer les changements
+        $em->persist($user);
+        $em->flush();
+        
+        return $this->json([
+            'success' => true,
+            'before' => $before,
+            'after' => $after,
+            'userId' => $user->getId(),
+            'debug' => 'User reloaded from DB and updated'
+        ]);
+    }
 }

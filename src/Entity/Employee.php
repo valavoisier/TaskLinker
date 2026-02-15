@@ -80,11 +80,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Two
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'employee')]
     private Collection $tasks;
 
-    #[ORM\Column(type: 'string', nullable: true)] 
+    #[ORM\Column(type: Types::TEXT, nullable: true)] 
     private ?string $googleAuthenticatorSecret = null;
     #[ORM\Column(type: 'boolean')]
     private bool $isTwoFactorEnabled = false;
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(name: 'hide2_faprompt', type: 'boolean')]
     private bool $hide2FAPrompt = false;
 
     public function __construct()

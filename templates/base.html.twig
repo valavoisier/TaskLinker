@@ -71,6 +71,79 @@
     {# JS perso #}
     <script src="{{ asset('js/select.js') }}"></script>
 
+    {# Modal 2FA pour les utilisateurs non configurés #}
+    {% if app.user and not app.user.isTwoFactorEnabled() and not app.user.hide2FAPrompt %}
+        <div id="modal-2fa-prompt" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2> <i class="fa-solid fa-shield-halved"></i> Sécurisez votre compte</h2>
+                </div>
+                <div class="modal-body">
+                    <p>La <strong>double authentification</strong> ajoute une couche de sécurité supplémentaire à votre compte.</p>
+                    <p>Voulez-vous l'activer maintenant ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="hideModal2FA('later')" class="btn-secondary">Plus tard</button>
+                    <button onclick="hideModal2FA('never')" class="btn-text">Ne plus me le demander</button>
+                    <a href="{{ path('app_2fa_setup') }}" class="btn-primary">Activer la 2FA</a>
+                </div>
+            </div>
+        </div>
+        <script>
+            function hideModal2FA(action) {
+                const modal = document.getElementById('modal-2fa-prompt');
+                modal.style.display = 'none';
+                
+                if (action === 'never') {
+                    // Enregistrer la préférence côté serveur
+                    fetch('{{ path('app_2fa_hide_prompt') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest' // Indiquer que c'est AJAX
+                        },
+                        credentials: 'same-origin', // Inclure les cookies de session
+                        redirect: 'manual' // Ne pas suivre les redirections automatiquement
+                    })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (response.status === 0 || response.type === 'opaqueredirect') {
+                            console.warn('Redirect detected, request may have failed');
+                            return null;
+                        }
+                        if (!response.ok) {
+                            console.error('HTTP error:', response.status);
+                            return null;
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        if (!text) return;
+                        console.log('Response text:', text);
+                        try {
+                            const data = JSON.parse(text);
+                            console.log('Parsed JSON:', data);
+                            if (!data.success) {
+                                console.error('Failed to hide prompt:', data);
+                            }
+                        } catch (e) {
+                            console.error('JSON parse error:', e);
+                            console.error('Response was:', text.substring(0, 200));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+                }
+            }
+            
+            // Afficher le modal après 2 secondes
+            setTimeout(() => {
+                document.getElementById('modal-2fa-prompt').style.display = 'flex';
+            }, 2000);
+        </script>
+    {% endif %}
+
 </body>
 
 </html>
