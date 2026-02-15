@@ -1,0 +1,37 @@
+{% extends 'auth/base-logout.html.twig' %}
+
+{% block body %}
+<div class="container auth-container-2fa-setup">
+    <h1>Configurer la double authentification</h1>
+
+    <div class="alert alert-info">
+        <strong>Étape 1 :</strong> Installez l'application <strong>Google Authenticator</strong> sur votre smartphone (disponible sur Play Store / App Store)
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body text-center">
+            <h5 class="card-title">Étape 2 : Scannez ce QR Code</h5>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ qrCodeContent|url_encode }}" alt="QR Code" class="qr-code-image">
+            
+            <details class="manual-code-details">
+                <summary class="manual-code-summary">Impossible de scanner ? Cliquez ici</summary>
+                <p class="manual-code-text">Entrez ce code manuellement dans Google Authenticator :</p>
+                <pre class="manual-code-pre">{{ secret }}</pre>
+            </details>
+        </div>
+    </div>
+
+    <div class="alert alert-warning">
+        <strong>Étape 3 :</strong> Une fois le QR Code scanné, Google Authenticator affichera un code à 6 chiffres qui change toutes les 30 secondes.
+        <br><strong>C'est CE code à 6 chiffres</strong> que vous devrez entrer pour activer et utiliser la 2FA.
+    </div>
+
+    <div class="text-center">
+        <a href="{{ path('app_2fa_enable') }}" class="button button-register">
+            J'ai scanné le QR Code → Activer la 2FA
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+

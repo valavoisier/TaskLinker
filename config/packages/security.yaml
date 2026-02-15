@@ -23,11 +23,14 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: project_index
+                success_handler: App\Security\TwoFactorAuthenticationSuccessHandler
             logout:
                 path: app_logout
                 # where to redirect after logout
                 target: app_home
+            two_factor: 
+                auth_form_path: 2fa_login 
+                check_path: 2fa_login_check
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -37,12 +40,18 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # Pages réservées aux chefs de projet 
-        - { path: ^/employee, roles: ROLE_ADMIN } 
-        - { path: ^/employees, roles: ROLE_ADMIN } 
-        # Pages réservées aux utilisateurs connectés 
-        - { path: ^/project, roles: ROLE_USER } 
-        - { path: ^/task, roles: ROLE_USER }
+        - { path: ^/logout, role: PUBLIC_ACCESS } 
+        # Pages de configuration 2FA - accessibles aux utilisateurs authentifiés (même sans 2FA)
+        - { path: ^/2fa/setup, roles: IS_AUTHENTICATED }
+        - { path: ^/2fa/enable, roles: IS_AUTHENTICATED }
+        # Page de vérification 2FA - seulement pendant le processus d'authentification
+        - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
+        # Pages réservées aux chefs de projet - FORCER la 2FA complète
+        - { path: ^/employee, roles: IS_AUTHENTICATED_FULLY } 
+        - { path: ^/employees, roles: IS_AUTHENTICATED_FULLY } 
+        # Pages réservées aux utilisateurs connectés - FORCER la 2FA complète
+        - { path: ^/project, roles: IS_AUTHENTICATED_FULLY } 
+        - { path: ^/task, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

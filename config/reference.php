@@ -1154,6 +1154,28 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             cache_pool?: string|Param, // The cache pool to use for storing the limiter state // Default: "cache.rate_limiter"
  *             storage_service?: string|Param, // The service ID of a custom storage implementation, this precedes any configured "cache_pool" // Default: null
  *         },
+ *         two_factor?: array{
+ *             check_path?: scalar|null|Param, // Default: "/2fa_check"
+ *             post_only?: bool|Param, // Default: true
+ *             auth_form_path?: scalar|null|Param, // Default: "/2fa"
+ *             always_use_default_target_path?: bool|Param, // Default: false
+ *             default_target_path?: scalar|null|Param, // Default: "/"
+ *             success_handler?: scalar|null|Param, // Default: null
+ *             failure_handler?: scalar|null|Param, // Default: null
+ *             authentication_required_handler?: scalar|null|Param, // Default: null
+ *             auth_code_parameter_name?: scalar|null|Param, // Default: "_auth_code"
+ *             trusted_parameter_name?: scalar|null|Param, // Default: "_trusted"
+ *             remember_me_sets_trusted?: scalar|null|Param, // Default: false
+ *             multi_factor?: bool|Param, // Default: false
+ *             prepare_on_login?: bool|Param, // Default: false
+ *             prepare_on_access_denied?: bool|Param, // Default: false
+ *             enable_csrf?: scalar|null|Param, // Default: false
+ *             csrf_parameter?: scalar|null|Param, // Default: "_csrf_token"
+ *             csrf_token_id?: scalar|null|Param, // Default: "two_factor"
+ *             csrf_header?: scalar|null|Param, // Default: null
+ *             csrf_token_manager?: scalar|null|Param, // Default: "scheb_two_factor.csrf_token_manager"
+ *             provider?: scalar|null|Param, // Default: null
+ *         },
  *         x509?: array{
  *             provider?: scalar|null|Param,
  *             user?: scalar|null|Param, // Default: "SSL_CLIENT_S_DN_Email"
@@ -1554,6 +1576,37 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         default_namespace?: scalar|null|Param, // Default namespace where stories will be created by maker. // Default: "Story"
  *     },
  * }
+ * @psalm-type SchebTwoFactorConfig = array{
+ *     persister?: scalar|null|Param, // Default: "scheb_two_factor.persister.doctrine"
+ *     model_manager_name?: scalar|null|Param, // Default: null
+ *     security_tokens?: list<scalar|null|Param>,
+ *     ip_whitelist?: list<scalar|null|Param>,
+ *     ip_whitelist_provider?: scalar|null|Param, // Default: "scheb_two_factor.default_ip_whitelist_provider"
+ *     two_factor_token_factory?: scalar|null|Param, // Default: "scheb_two_factor.default_token_factory"
+ *     two_factor_provider_decider?: scalar|null|Param, // Default: "scheb_two_factor.default_provider_decider"
+ *     two_factor_condition?: scalar|null|Param, // Default: null
+ *     code_reuse_cache?: scalar|null|Param, // Default: null
+ *     code_reuse_cache_duration?: int|Param, // Default: 60
+ *     code_reuse_default_handler?: scalar|null|Param, // Default: null
+ *     google?: bool|array{
+ *         enabled?: scalar|null|Param, // Default: false
+ *         form_renderer?: scalar|null|Param, // Default: null
+ *         issuer?: scalar|null|Param, // Default: null
+ *         server_name?: scalar|null|Param, // Default: null
+ *         template?: scalar|null|Param, // Default: "@SchebTwoFactor/Authentication/form.html.twig"
+ *         digits?: int|Param, // Default: 6
+ *         leeway?: int|Param, // Default: 0
+ *     },
+ *     totp?: bool|array{
+ *         enabled?: scalar|null|Param, // Default: false
+ *         form_renderer?: scalar|null|Param, // Default: null
+ *         issuer?: scalar|null|Param, // Default: null
+ *         server_name?: scalar|null|Param, // Default: null
+ *         leeway?: int|Param, // Default: 0
+ *         parameters?: list<scalar|null|Param>,
+ *         template?: scalar|null|Param, // Default: "@SchebTwoFactor/Authentication/form.html.twig"
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1567,6 +1620,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
+ *     scheb_two_factor?: SchebTwoFactorConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1584,6 +1638,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
+ *         scheb_two_factor?: SchebTwoFactorConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1598,6 +1653,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         scheb_two_factor?: SchebTwoFactorConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1614,6 +1670,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
+ *         scheb_two_factor?: SchebTwoFactorConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

@@ -12,11 +12,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Employee implements UserInterface, PasswordAuthenticatedUserInterface
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -78,6 +79,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'employee')]
     private Collection $tasks;
+
+    #[ORM\Column(type: 'string', nullable: true)] 
+    private ?string $googleAuthenticatorSecret = null;
+    #[ORM\Column(type: 'boolean')]
+    private bool $isTwoFactorEnabled = false;
 
     public function __construct()
     {
@@ -249,6 +255,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
             'status' => $this->status,
             'roles' => $this->roles,
             'password' => hash('crc32c', $this->password),
+            'isTwoFactorEnabled' => $this->isTwoFactorEnabled,
         ];
     }
 
@@ -265,6 +272,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
         $this->status = $data['status'];
         $this->roles = $data['roles'];
         $this->password = $data['password'];
+        $this->isTwoFactorEnabled = $data['isTwoFactorEnabled'] ?? false;
         
         // Réinitialiser les collections
         $this->projects = new ArrayCollection();
@@ -344,4 +352,39 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-}
+  /* 2FA Google Authenticator */ 
+    public function isGoogleAuthenticatorEnabled(): bool 
+    {
+        // Désactiver la 2FA en dev si la variable d'environnement est définie
+        if (isset($_ENV['BYPASS_2FA']) && $_ENV['BYPASS_2FA'] === '1') {
+            return false;
+        }
+        
+        return null !== $this->googleAuthenticatorSecret && $this->isTwoFactorEnabled; 
+    } 
+    
+    public function getGoogleAuthenticatorUsername(): string 
+    { 
+        return $this->email; 
+    } 
+    
+    public function getGoogleAuthenticatorSecret(): ?string 
+    { 
+        return $this->googleAuthenticatorSecret; 
+    } 
+        
+    public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void 
+    { 
+        $this->googleAuthenticatorSecret = $googleAuthenticatorSecret; 
+    }
+    
+    public function isTwoFactorEnabled(): bool
+    {
+        return $this->isTwoFactorEnabled;
+    }
+
+    public function setIsTwoFactorEnabled(bool $isTwoFactorEnabled): void
+    {
+        $this->isTwoFactorEnabled = $isTwoFactorEnabled;
+    }
+  }

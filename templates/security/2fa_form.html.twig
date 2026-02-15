@@ -1,0 +1,33 @@
+{% extends 'auth/base-logout.html.twig' %}
+
+{% block body %}
+<div class="container auth-container-2fa">
+    <h1>Vérification en deux étapes</h1>
+
+    <p>Ouvrez l'application <strong>Google Authenticator</strong> sur votre smartphone et entrez le code à 6 chiffres affiché pour <strong>TaskLinker</strong>.</p>
+
+    {% if authenticationError %}
+        <div class="alert alert-danger">
+            {{ authenticationError is same as(true) ? 'Code incorrect. Veuillez réessayer.' : authenticationError }}
+        </div>
+    {% endif %}
+
+    <form action="{{ checkPathUrl|default(path('2fa_login_check')) }}" method="post">
+        <div class="form-group mb-3">
+            <label for="_auth_code">Code de vérification (6 chiffres) :</label>
+            <input type="text" 
+                   name="_auth_code" 
+                   id="_auth_code" 
+                   class="form-control text-center auth-code-input" 
+                   maxlength="6"
+                   pattern="[0-9]{6}"
+                   placeholder="000000"
+                   required 
+                   autofocus />
+            <small class="form-text text-muted">Le code change toutes les 30 secondes</small>
+        </div>
+
+        <button type="submit" class="button login-button">Valider</button>
+    </form>
+</div>
+{% endblock %}

@@ -10,6 +10,7 @@
                 <i class="fa-solid fa-list-check"></i> Projets
             </a>
         </li>
+        
         {% if is_granted('ROLE_ADMIN') %}
             <li class="{{ active_menu == 'employes' ? 'active' : '' }}">
                 <a href="{{ path('employee_index') }}">
