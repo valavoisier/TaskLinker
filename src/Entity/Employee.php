@@ -84,6 +84,8 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Two
     private ?string $googleAuthenticatorSecret = null;
     #[ORM\Column(type: 'boolean')]
     private bool $isTwoFactorEnabled = false;
+    #[ORM\Column(type: 'boolean')]
+    private bool $hide2FAPrompt = false;
 
     public function __construct()
     {
@@ -256,6 +258,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Two
             'roles' => $this->roles,
             'password' => hash('crc32c', $this->password),
             'isTwoFactorEnabled' => $this->isTwoFactorEnabled,
+            'hide2FAPrompt' => $this->hide2FAPrompt,
         ];
     }
 
@@ -273,6 +276,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Two
         $this->roles = $data['roles'];
         $this->password = $data['password'];
         $this->isTwoFactorEnabled = $data['isTwoFactorEnabled'] ?? false;
+        $this->hide2FAPrompt = $data['hide2FAPrompt'] ?? false;
         
         // Réinitialiser les collections
         $this->projects = new ArrayCollection();
@@ -386,5 +390,15 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Two
     public function setIsTwoFactorEnabled(bool $isTwoFactorEnabled): void
     {
         $this->isTwoFactorEnabled = $isTwoFactorEnabled;
+    }
+
+    public function getHide2FAPrompt(): bool
+    {
+        return $this->hide2FAPrompt;
+    }
+
+    public function setHide2FAPrompt(bool $hide2FAPrompt): void
+    {
+        $this->hide2FAPrompt = $hide2FAPrompt;
     }
   }
